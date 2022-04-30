@@ -1,4 +1,5 @@
 package com.example.mvc_thymleaf.Models;
+import com.example.mvc_thymleaf.Models.Rendezvous;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;

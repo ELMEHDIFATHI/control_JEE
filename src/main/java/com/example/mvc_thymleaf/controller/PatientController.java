@@ -25,24 +25,6 @@ public class PatientController {
 
     private PatientRepo patientRepo;
 
-    @GetMapping(path = "/user/index")
-    public String patients(Model model,
-                           @RequestParam(name = "page",defaultValue = "0") int page,
-                           @RequestParam(name = "size",defaultValue = "10") int size,
-                           @RequestParam(name = "keyword",defaultValue = "") String keyword){
-        Page<Patient> pagePatients=patientRepo.findByNomContains(keyword,PageRequest.of(page,size));
-        model.addAttribute("listPatients",pagePatients.getContent());
-        model.addAttribute("pages",new int[pagePatients.getTotalPages()]);
-        model.addAttribute("currentPage",page);
-        model.addAttribute("keyword",keyword);
-        return "patients";
-    }
-
-    @GetMapping ("/admin/delete")
-    public String delete(Long id,String keyword,int page) {
-        patientRepo.deleteById(id);
-        return "redirect:/user/index?page="+page+"&keyword="+keyword;
-    }
 
     @GetMapping ("/")
     public String home() {
@@ -56,6 +38,32 @@ public class PatientController {
         return  patientRepo.findAll();
     }
 
+    @GetMapping(path = "/user/index")
+    public String patients(Model model,
+                           @RequestParam(name = "page",defaultValue = "0") int page,
+                           @RequestParam(name = "size",defaultValue = "10") int size,
+                           @RequestParam(name = "keyword",defaultValue = "") String keyword
+            ){
+        Page<Patient> pagePatients=patientRepo.findByNomContains(keyword,PageRequest.of(page,size));
+        model.addAttribute("listPatients",pagePatients.getContent());
+        model.addAttribute("pages",new int[pagePatients.getTotalPages()]);
+        model.addAttribute("currentPage",page);
+        model.addAttribute("keyword",keyword);
+
+        return "patients";
+        //return "redirect:/user/index?page="+page+"&keyword="+keyword;
+    }
+
+
+
+    @GetMapping ("/admin/delete")
+    public String delete(Long id,String keyword,int page) {
+        patientRepo.deleteById(id);
+        return "redirect:/user/index?page="+page+"&keyword="+keyword;
+    }
+
+
+
     @GetMapping("/admin/formPatients")
     public String formPatient(Model model){
         model.addAttribute("patient",new Patient());
@@ -63,17 +71,6 @@ public class PatientController {
         return "formPatients";
 
     }
-    @GetMapping("/admin/editPatient")
-    public String formPatient(Model model,Long id,String keyword,int page){
-        Patient patient=patientRepo.findById(id).orElse(null);
-        if(patient==null) throw  new RuntimeException("Patient introuvable");
-        model.addAttribute("patient",patient);
-        model.addAttribute("page",page);
-        model.addAttribute("keyword",keyword);
-        return "editPatient";
-
-    }
-
     @GetMapping("/admin/detailPatient")
     public String detailPatient(Model model,Long id){
         Patient patient=patientRepo.findById(id).orElse(null);
@@ -83,6 +80,8 @@ public class PatientController {
         return "detailPatient";
 
     }
+
+
 
     @PostMapping("/admin/save")
     public String save(Model model, @Valid Patient patient, BindingResult b,
@@ -104,6 +103,17 @@ public class PatientController {
         }
         patientRepo.save(patient);
         return "redirect:/user/index";
+    }
+
+    @GetMapping("/admin/editPatient")
+    public String formPatient(Model model,Long id,String keyword,int page){
+        Patient patient=patientRepo.findById(id).orElse(null);
+        if(patient==null) throw  new RuntimeException("Patient introuvable");
+        model.addAttribute("patient",patient);
+        model.addAttribute("page",page);
+        model.addAttribute("keyword",keyword);
+        return "editPatient";
+
     }
 
 

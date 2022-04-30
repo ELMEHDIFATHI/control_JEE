@@ -14,13 +14,13 @@ public class Rendezvous {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Date date;
-    @Enumerated(EnumType.ORDINAL)
-    private StatusRdv rdv;
+
+    private String rdv;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne
     private Patient patient;
     @ManyToOne
-    private  Medecin medecin;
+    private Medecin medecin;
     @OneToOne(mappedBy = "rendezvous")
     private  Consultation consultation;
 }
